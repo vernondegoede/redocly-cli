@@ -20,6 +20,19 @@ describe('ref-utils', () => {
     `);
   });
 
+  it(`should split URLs with query parameters`, () => {
+    const reference = 'https://example.com/foo/blah%2Eyaml/raw?ref=baz#/paths/~1api~1invoices';
+    expect(parseRef(reference)).toMatchInlineSnapshot(`
+      {
+        "pointer": [
+          "paths",
+          "/api/invoices",
+        ],
+        "uri": "https://example.com/foo/blah%2Eyaml/raw?ref=baz",
+      }
+    `);
+  });
+
   it(`should unescape refs with '~'`, () => {
     const reference = 'somefile.yaml#/components/schemas/complex~0name';
     expect(parseRef(reference)).toMatchInlineSnapshot(`
@@ -129,6 +142,10 @@ describe('ref-utils', () => {
 
     it('returns base name for url reference', () => {
       expect(refBaseName('http://example.com/tests/crocodile.json')).toStrictEqual('crocodile');
+    });
+
+    it('returns base name for url reference with query parameters', () => {
+      expect(refBaseName('http://example.com/tests/crocodile.json?blah=foo')).toStrictEqual('crocodile');
     });
 
     it('returns base name for file with multiple dots in name', () => {
